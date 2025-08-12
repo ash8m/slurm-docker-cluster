@@ -31,6 +31,7 @@ This setup consists of the following containers:
 - **slurmdbd**: Manages the Slurm database.
 - **slurmctld**: The Slurm controller responsible for job and resource management.
 - **c1, c2**: Compute nodes (running `slurmd`).
+- **ipa-server**: FreeIPA server.
 
 ### Persistent Volumes:
 
@@ -46,15 +47,14 @@ This setup consists of the following containers:
 The version of the Slurm project and the Docker build process can be simplified
 by using a `.env` file, which will be automatically picked up by Docker Compose.
 
-Install podman-compose if you are using podman. You can replace any docker compose
-commands with `podman-compose` and they should work.
+Install `podman-compose` to use Podman. This branch, which includes FreeIPA integration, has only been tested with `podman-compose`. You can replace any `docker-compose` commands with `podman-compose`, and they should work as expected.
 
 ```bash
  pip3 install podman-compose
 ```
 
-Update the `SLURM_TAG` and `IMAGE_TAG` found in the `.env` file and build
-the image:
+Update the `SLURM_TAG` and `IMAGE_TAG` found in the `.env` file if needed and
+build the image:
 
 ```bash
 docker compose build
@@ -76,13 +76,12 @@ docker build --build-arg SLURM_TAG="slurm-21-08-6-1" -t slurm-docker-cluster:21.
 
 ## FreeIPA setup
 
-FreeIPA assigns users UIDs and GIDs that are outside the normal range configured in /etc/subuid and /etc/subgid in the host.
-To switch to a FreeIPA-managed user inside a rootless Podman container, you need to extend this range on the host for the user running Podman.
+FreeIPA assigns users UIDs and GIDs that are outside the `100000:65536` range configured in `/etc/subuid` and `/etc/subgid` in the host. To switch to a FreeIPA-managed user inside a rootless Podman container, you need to extend this range on the host for the user running Podman.
 
 You can learn more about subuids and subgids in the context of containers [here](https://www.funtoo.org/LXD/What_are_subuids_and_subgids%3F).
 
 Update subuid and subgid ranges
-Edit /etc/subuid and /etc/subgid to extend the range for the Podman user. For example, for a user named `username`:
+Edit `/etc/subuid` and `/etc/subgid` to extend the range for the Podman user. For example, for a user named `username`:
 
 ```
 username:100000:1200000000
@@ -115,6 +114,8 @@ This will start up all containers in detached mode. You can monitor their status
 ```bash
 docker compose ps
 ```
+
+Note: `FreeIPA` takes around 5 minutes to set up when starting for the first time. Once set up, the configuration and data are stored in the `ipa_data` volume and will be reused as long as the volume remains available.
 
 ## 📝 Register the Cluster
 
