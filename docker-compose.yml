@@ -1,4 +1,22 @@
 services:
+  ipa-server:
+    image: quay.io/freeipa/freeipa-server:rocky-9-4.12.2
+    container_name: ipa-server
+    hostname: server.ipa.local
+    networks:
+      - slurm-network
+    environment:
+      - PASSWORD=password
+    volumes:
+      - ./ipa-data:/data:Z
+    read_only: true
+    restart: unless-stopped
+    command: >
+      ipa-server-install
+      -r IPA.LOCAL
+      --no-ntp
+      --unattended
+
   mysql:
     image: docker.io/mariadb:10.11
     hostname: mysql
@@ -43,7 +61,7 @@ services:
         SLURM_TAG: ${SLURM_TAG}
     command: ["slurmctld"]
     container_name: slurmctld
-    hostname: slurmctld
+    hostname: slurmctld.ipa.local
     volumes:
       - etc_munge:/etc/munge
       - etc_slurm:/etc/slurm
@@ -53,6 +71,7 @@ services:
       - "6817"
     depends_on:
       - "slurmdbd"
+      - "ipa-server"
     networks:
       - slurm-network
 
@@ -64,7 +83,7 @@ services:
       args:
         SLURM_TAG: ${SLURM_TAG}
     command: ["slurmd"]
-    hostname: c1
+    hostname: c1.ipa.local
     container_name: c1
     volumes:
       - etc_munge:/etc/munge
@@ -75,13 +94,14 @@ services:
       - "6818"
     depends_on:
       - "slurmctld"
+      - "ipa-server"
     networks:
       - slurm-network
 
   c2:
     image: slurmd:${IMAGE_TAG}
     command: ["slurmd"]
-    hostname: c2
+    hostname: c2.ipa.local
     container_name: c2
     volumes:
       - etc_munge:/etc/munge
@@ -92,6 +112,7 @@ services:
       - "6818"
     depends_on:
       - "slurmctld"
+      - "ipa-server"
     networks:
       - slurm-network
 

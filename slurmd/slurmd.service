@@ -1,7 +1,7 @@
 [Unit]
 Description=Slurm Daemon (slurmd)
 After=network-online.target
-Wants=network-online.target
+Wants=network-online.target munged.service ipa-enroll.service
 
 [Service]
 Type=simple

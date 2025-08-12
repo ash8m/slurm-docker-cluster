@@ -32,6 +32,7 @@ RUN set -ex \
        vim-enhanced \
        http-parser-devel \
        json-c-devel \
+       freeipa-client \
     && yum clean all \
     && rm -rf /var/cache/yum
 
@@ -98,30 +99,42 @@ ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 FROM base as slurmctld
 # Copy unit files into systemd's local config dir
-# Set permissions
-# Copy helper scripts
+# Set their permissions
+# Copy helper scripts and set their permissions
 # Enable the services so they start when systemd launches
 COPY slurmctld/munged.service /etc/systemd/system/munged.service
 COPY slurmctld/slurmctld.service /etc/systemd/system/slurmctld.service
+COPY slurmctld/ipa-enroll.service /etc/systemd/system/ipa-enroll.service
 RUN chmod 644 /etc/systemd/system/munged.service \
-    && chmod 644 /etc/systemd/system/slurmctld.service
+    && chmod 644 /etc/systemd/system/slurmctld.service \
+    && chmod 644 /etc/systemd/system/ipa-enroll.service
 COPY slurmctld/start-slurmctld.sh /usr/local/bin/start-slurmctld.sh
-RUN chmod 755 /usr/local/bin/start-slurmctld.sh
+COPY slurmctld/ipa-enroll.sh /usr/local/bin/ipa-enroll.sh
+RUN chmod 755 /usr/local/bin/start-slurmctld.sh \
+    && chmod 755 /usr/local/bin/ipa-enroll.sh
 RUN systemctl enable munged.service \
-    && systemctl enable slurmctld.service
+    && systemctl enable slurmctld.service \
+    && systemctl enable ipa-enroll.service
+
+
 ENTRYPOINT ["/sbin/init"]
 
 FROM base as slurmd
 # Copy unit files into systemd's local config dir
-# Set permissions
-# Copy helper scripts
+# Set their permissions
+# Copy helper scripts and set their permissions
 # Enable the services so they start when systemd launches
-COPY slurmd/start-slurmd.sh /usr/local/bin/start-slurmd.sh
-RUN chmod +x /usr/local/bin/start-slurmd.sh 
 COPY slurmd/munged.service /etc/systemd/system/munged.service
 COPY slurmd/slurmd.service /etc/systemd/system/slurmd.service
+COPY slurmd/ipa-enroll.service /etc/systemd/system/ipa-enroll.service
 RUN chmod 644 /etc/systemd/system/munged.service \
-    && chmod 644 /etc/systemd/system/slurmd.service
+    && chmod 644 /etc/systemd/system/slurmd.service \
+    && chmod 644 /etc/systemd/system/ipa-enroll.service
+COPY slurmd/start-slurmd.sh /usr/local/bin/start-slurmd.sh
+COPY slurmd/ipa-enroll.sh /usr/local/bin/ipa-enroll.sh
+RUN chmod 755 /usr/local/bin/start-slurmd.sh \
+    && chmod 755 /usr/local/bin/ipa-enroll.sh
 RUN systemctl enable munged.service \
-    && systemctl enable slurmd.service
+    && systemctl enable slurmd.service \
+    && systemctl enable ipa-enroll.service
 ENTRYPOINT ["/sbin/init"]

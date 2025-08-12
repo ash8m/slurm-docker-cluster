@@ -1,0 +1,15 @@
+[Unit]
+Description=Enroll container to FreeIPA
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/ipa-enroll.sh
+RemainAfterExit=yes
+TimeoutStartSec=900
+Restart=on-failure
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
