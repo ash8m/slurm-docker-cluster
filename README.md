@@ -74,6 +74,20 @@ tagging the container with a version ***(IMAGE_TAG)***:
 docker build --build-arg SLURM_TAG="slurm-21-08-6-1" -t slurm-docker-cluster:21.08.6 .
 ```
 
+## FreeIPA setup
+
+FreeIPA assigns users UIDs and GIDs that are outside the normal range configured in /etc/subuid and /etc/subgid in the host.
+To switch to a FreeIPA-managed user inside a rootless Podman container, you need to extend this range on the host for the user running Podman.
+
+You can learn more about subuids and subgids in the context of containers [here](https://www.funtoo.org/LXD/What_are_subuids_and_subgids%3F).
+
+Update subuid and subgid ranges
+Edit /etc/subuid and /etc/subgid to extend the range for the Podman user. For example, for a user named `username`:
+
+```
+username:100000:1200000000
+```
+
 ## 🚀 Starting the Cluster
 
 Once the image is built, deploy the cluster with the default version of slurm
