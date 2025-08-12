@@ -2,13 +2,13 @@ services:
   ipa-server:
     image: quay.io/freeipa/freeipa-server:rocky-9-4.12.2
     container_name: ipa-server
-    hostname: server.ipa.local
+    hostname: ipa-server.ipa.local
     networks:
       - slurm-network
     environment:
       - PASSWORD=password
     volumes:
-      - ./ipa-data:/data:Z
+      - ipa_data:/data:Z
     read_only: true
     restart: unless-stopped
     command: >
@@ -122,6 +122,7 @@ volumes:
   slurm_jobdir:
   var_lib_mysql:
   var_log_slurm:
+  ipa_data:
 
 networks:
   slurm-network:
