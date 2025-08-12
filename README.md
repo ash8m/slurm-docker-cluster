@@ -45,11 +45,23 @@ This setup consists of the following containers:
 The version of the Slurm project and the Docker build process can be simplified
 by using a `.env` file, which will be automatically picked up by Docker Compose.
 
+Install podman-compose if you want to use podman
+
+```bash
+ pip3 install podman-compose
+```
+
 Update the `SLURM_TAG` and `IMAGE_TAG` found in the `.env` file and build
 the image:
 
 ```bash
 docker compose build
+```
+
+Import the images to podman:
+
+```bash
+docker save slurm-docker-cluster:21.08.6 | podman load
 ```
 
 Alternatively, you can build the Slurm Docker image locally by specifying the
@@ -69,6 +81,11 @@ using Docker Compose:
 docker compose up -d
 ```
 
+for podman
+
+```bash
+podman-compose --file docker-compose.yml up --detach
+```
 To specify a specific version and override what is configured in `.env`, specify
 the `IMAGE_TAG`:
 

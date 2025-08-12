@@ -1,4 +1,4 @@
-FROM rockylinux:8
+FROM docker.io/almalinux/9-init
 
 LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docker-cluster" \
       org.opencontainers.image.title="slurm-docker-cluster" \
@@ -10,7 +10,7 @@ RUN set -ex \
     && yum makecache \
     && yum -y update \
     && yum -y install dnf-plugins-core \
-    && yum config-manager --set-enabled powertools \
+    && yum config-manager --set-enabled crb \
     && yum -y install \
        wget \
        bzip2 \
@@ -35,7 +35,7 @@ RUN set -ex \
     && yum clean all \
     && rm -rf /var/cache/yum
 
-RUN alternatives --set python /usr/bin/python3
+RUN alternatives --install /usr/bin/python python /usr/bin/python3 10
 
 RUN pip3 install Cython pytest
 
