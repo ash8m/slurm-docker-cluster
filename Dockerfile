@@ -115,8 +115,6 @@ RUN chmod 755 /usr/local/bin/start-slurmctld.sh \
 RUN systemctl enable munged.service \
     && systemctl enable slurmctld.service \
     && systemctl enable ipa-enroll.service
-
-
 ENTRYPOINT ["/sbin/init"]
 
 FROM base as slurmd

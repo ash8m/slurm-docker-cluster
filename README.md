@@ -39,13 +39,15 @@ This setup consists of the following containers:
 - `slurm_jobdir`: Mounted to `/data`
 - `var_lib_mysql`: Mounted to `/var/lib/mysql`
 - `var_log_slurm`: Mounted to `/var/log/slurm`
+- `ipa_data`: Mounted to `/data` in ipa-server
 
 ## 🛠️  Building the Docker Image
 
 The version of the Slurm project and the Docker build process can be simplified
 by using a `.env` file, which will be automatically picked up by Docker Compose.
 
-Install podman-compose if you want to use podman
+Install podman-compose if you are using podman. You can replace any docker compose
+commands with `podman-compose` and they should work.
 
 ```bash
  pip3 install podman-compose
@@ -58,10 +60,10 @@ the image:
 docker compose build
 ```
 
-Import the images to podman:
+Or with `podman-compose`
 
 ```bash
-docker save slurm-docker-cluster:21.08.6 | podman load
+podman-compose build
 ```
 
 Alternatively, you can build the Slurm Docker image locally by specifying the
@@ -81,11 +83,12 @@ using Docker Compose:
 docker compose up -d
 ```
 
-for podman
+with podman
 
 ```bash
-podman-compose --file docker-compose.yml up --detach
+podman-compose up -d
 ```
+
 To specify a specific version and override what is configured in `.env`, specify
 the `IMAGE_TAG`:
 

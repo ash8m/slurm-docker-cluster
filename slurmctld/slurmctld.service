@@ -1,7 +1,7 @@
 [Unit]
 Description=Slurm Controller Daemon
 After=network.target munged.service
-Wants=network-online.target munged.service ipa-enroll.service
+Wants=network-online.target munged.service
 
 [Service]
 Type=simple
