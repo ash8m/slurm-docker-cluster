@@ -1,0 +1,16 @@
+[Unit]
+Description=MUNGE Authentication Service
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=munge
+Group=munge
+ExecStart=/usr/sbin/munged --foreground --key-file=/etc/munge/munge.key
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

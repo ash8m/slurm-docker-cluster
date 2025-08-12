@@ -1,4 +1,4 @@
-FROM docker.io/almalinux/9-init AS base
+FROM docker.io/almalinux/9-init
 
 LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docker-cluster" \
       org.opencontainers.image.title="slurm-docker-cluster" \
@@ -87,41 +87,13 @@ RUN set -x \
     && /sbin/create-munge-key
 
 COPY slurm.conf /etc/slurm/slurm.conf
-
-FROM base as slurmdbd
-COPY slurmdbd/slurmdbd.conf /etc/slurm/slurmdbd.conf
+COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
 RUN set -x \
     && chown slurm:slurm /etc/slurm/slurmdbd.conf \
     && chmod 600 /etc/slurm/slurmdbd.conf
-COPY slurmdbd/entrypoint.sh /usr/local/bin/entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
-FROM base as slurmctld
-# Copy unit files into systemd's local config dir
-# Set permissions
-# Copy helper scripts
-# Enable the services so they start when systemd launches
-COPY slurmctld/munged.service /etc/systemd/system/munged.service
-COPY slurmctld/slurmctld.service /etc/systemd/system/slurmctld.service
-RUN chmod 644 /etc/systemd/system/munged.service \
-    && chmod 644 /etc/systemd/system/slurmctld.service
-COPY slurmctld/start-slurmctld.sh /usr/local/bin/start-slurmctld.sh
-RUN chmod 755 /usr/local/bin/start-slurmctld.sh
-RUN systemctl enable munged.service \
-    && systemctl enable slurmctld.service
-ENTRYPOINT ["/sbin/init"]
 
-FROM base as slurmd
-# Copy unit files into systemd's local config dir
-# Set permissions
-# Copy helper scripts
-# Enable the services so they start when systemd launches
-COPY slurmd/start-slurmd.sh /usr/local/bin/start-slurmd.sh
-RUN chmod +x /usr/local/bin/start-slurmd.sh 
-COPY slurmd/munged.service /etc/systemd/system/munged.service
-COPY slurmd/slurmd.service /etc/systemd/system/slurmd.service
-RUN chmod 644 /etc/systemd/system/munged.service \
-    && chmod 644 /etc/systemd/system/slurmd.service
-RUN systemctl enable munged.service \
-    && systemctl enable slurmd.service
-ENTRYPOINT ["/sbin/init"]
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
+CMD ["slurmdbd"]

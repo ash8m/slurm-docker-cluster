@@ -1,0 +1,16 @@
+[Unit]
+Description=Slurm Controller Daemon
+After=network.target munged.service
+Wants=network-online.target munged.service
+
+[Service]
+Type=simple
+User=slurm
+Group=slurm
+ExecStart=/usr/local/bin/start-slurmctld.sh
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
