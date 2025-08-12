@@ -32,7 +32,7 @@ services:
       - slurm-network
 
   slurmdbd:
-    image: slurmdbd/${IMAGE_TAG}
+    image: slurmdbd:${IMAGE_TAG}
     build:
       context: .
       target: slurmdbd
