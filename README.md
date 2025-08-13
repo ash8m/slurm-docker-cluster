@@ -76,9 +76,11 @@ docker build --build-arg SLURM_TAG="slurm-21-08-6-1" -t slurm-docker-cluster:21.
 
 ## FreeIPA setup
 
-FreeIPA assigns users UIDs and GIDs that are outside the `100000:65536` range configured in `/etc/subuid` and `/etc/subgid` in the host. To switch to a FreeIPA-managed user inside a rootless Podman container, you need to extend this range on the host for the user running Podman.
+FreeIPA assigns user UIDs and GIDs that fall outside the default range (100000:65536) configured in `/etc/subuid` and `/etc/subgid` on the host. In a rootless container, these user and group IDs are mapped to the host using the ranges defined in those files.
 
-You can learn more about subuids and subgids in the context of containers [here](https://www.funtoo.org/LXD/What_are_subuids_and_subgids%3F). You can read more about how FreeIPA allocates id [here](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_and_managing_identity_management/adjusting-id-ranges-manually_configuring-and-managing-idm)
+To successfully switch to a FreeIPA-managed user inside the container, you need to expand the subuid and subgid ranges on the host for the user running Podman.
+
+You can learn more about subuids and subgids in the context of containers [here](https://www.funtoo.org/LXD/What_are_subuids_and_subgids%3F). You can read more about how FreeIPA allocates IDs [here](https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8/html/configuring_and_managing_identity_management/adjusting-id-ranges-manually_configuring-and-managing-idm)
 
 Here, the FreeIPA server is configured in `docker-compose.yaml` to allocate IDs starting from 100000000. By default, it can assigns 200,000 IDs starting from that starting point.
 
