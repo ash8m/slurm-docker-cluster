@@ -16,6 +16,7 @@ services:
       -r IPA.LOCAL
       --no-ntp
       --unattended
+      --idstart 100000000
 
   mysql:
     image: docker.io/mariadb:10.11
@@ -59,7 +60,6 @@ services:
       target: slurmctld
       args:
         SLURM_TAG: ${SLURM_TAG}
-    command: ["slurmctld"]
     container_name: slurmctld
     hostname: slurmctld.ipa.local
     volumes:
@@ -82,7 +82,6 @@ services:
       target: slurmd
       args:
         SLURM_TAG: ${SLURM_TAG}
-    command: ["slurmd"]
     hostname: c1.ipa.local
     container_name: c1
     volumes:
@@ -100,7 +99,6 @@ services:
 
   c2:
     image: slurmd:${IMAGE_TAG}
-    command: ["slurmd"]
     hostname: c2.ipa.local
     container_name: c2
     volumes:
