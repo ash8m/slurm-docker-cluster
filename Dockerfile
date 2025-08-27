@@ -98,23 +98,30 @@ COPY slurmdbd/entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 FROM base as slurmctld
+# Copy openportal config files into /etc/openportal/
 # Copy unit files into systemd's local config dir
 # Set their permissions
 # Copy helper scripts and set their permissions
 # Enable the services so they start when systemd launches
-COPY slurmctld/munged.service /etc/systemd/system/munged.service
-COPY slurmctld/slurmctld.service /etc/systemd/system/slurmctld.service
-COPY slurmctld/ipa-enroll.service /etc/systemd/system/ipa-enroll.service
+RUN mkdir /etc/openportal
+COPY op-config/* /etc/openportal/
+COPY slurmctld/*.service /etc/systemd/system/
+COPY op-service/* /etc/systemd/system/
 RUN chmod 644 /etc/systemd/system/munged.service \
     && chmod 644 /etc/systemd/system/slurmctld.service \
-    && chmod 644 /etc/systemd/system/ipa-enroll.service
+    && chmod 644 /etc/systemd/system/ipa-enroll.service \
+    && chmod 644 /etc/systemd/system/op-*
 COPY slurmctld/start-slurmctld.sh /usr/local/bin/start-slurmctld.sh
 COPY slurmctld/ipa-enroll.sh /usr/local/bin/ipa-enroll.sh
 RUN chmod 755 /usr/local/bin/start-slurmctld.sh \
     && chmod 755 /usr/local/bin/ipa-enroll.sh
 RUN systemctl enable munged.service \
     && systemctl enable slurmctld.service \
-    && systemctl enable ipa-enroll.service
+    && systemctl enable ipa-enroll.service \
+    && systemctl enable op-cluster.service \
+    && systemctl enable op-filesystem.service \
+    && systemctl enable op-slurm.service \
+    && systemctl enable op-freeipa.service 
 ENTRYPOINT ["/sbin/init"]
 
 FROM base as slurmd
