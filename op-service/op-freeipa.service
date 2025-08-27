@@ -1,0 +1,16 @@
+[Unit]
+Description=OpenPortal aip1.clusters.shared.slurm agent
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+Environment="RUST_LOG_FORMAT=json"
+Environment="RUST_LOG=info"
+Environment="OPENPORTAL_ALLOW_INVALID_SSL_CERTS=true"
+ExecStart=/usr/bin/op-freeipa -c /etc/openportal/freeipa-config.toml run
+
+[Install]
+WantedBy=multi-user.target

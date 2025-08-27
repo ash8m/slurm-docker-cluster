@@ -1,0 +1,15 @@
+[Unit]
+Description=OpenPortal clusters.filesystem agent
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+Environment="RUST_LOG_FORMAT=json"
+Environment="RUST_LOG=info"
+ExecStart=/usr/bin/op-filesystem -c /etc/openportal/filesystem-config.toml run
+
+[Install]
+WantedBy=multi-user.target
