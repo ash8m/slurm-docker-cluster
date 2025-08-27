@@ -1,0 +1,59 @@
+agent = "Instance"
+
+[service]
+name = "cluster"
+url = "ws://localhost:8042/"
+ip = "127.0.0.1"
+port = 8042
+
+[[service.servers]]
+name = "mcp"
+url = "ws://host.containers.internal:8040/"
+zone = "cluster"
+
+[service.servers.inner_key]
+data = "2824a8a39feb69daac1a7e5685821b58d99093d63d5416a7c9548d1aac471dc5"
+
+[service.servers.outer_key]
+data = "81f7ce0e6147311e24b33bb59e257aab71e87355f46e8ae2a56355c52fa8e404"
+
+[[service.clients]]
+name = "freeipa"
+zone = "local"
+
+[service.clients.ip]
+Range = "0.0.0.0/0"
+
+[service.clients.inner_key]
+data = "8c93b8c21b81c6d07ba097696989cd42ce19589f1043ae91c3ee745662661c72"
+
+[service.clients.outer_key]
+data = "1f5561f6e07ab73f907f2f7fb29532c5cdc6397a96103af734eb0d653a10092f"
+
+[[service.clients]]
+name = "slurm"
+zone = "local"
+
+[service.clients.ip]
+Range = "0.0.0.0/0"
+
+[service.clients.inner_key]
+data = "f2aeb0d00823b858fe6edfeaf9489fe0a191246d42f4c2523f0a404f36ce3f59"
+
+[service.clients.outer_key]
+data = "4866220f06f4d871385429057c2de7a4b9794a2572ad2830321606390fc4470d"
+
+[[service.clients]]
+name = "filesystem"
+zone = "local"
+
+[service.clients.ip]
+Range = "0.0.0.0/0"
+
+[service.clients.inner_key]
+data = "0fe0367eb153c9ac3cfff954a895936345e2bd6ccb4120a189aae5364e164274"
+
+[service.clients.outer_key]
+data = "c187c3847038ecfdbab9e7158333da2a6e538f4a75dc6247b15cc483ee479225"
+
+[extras]

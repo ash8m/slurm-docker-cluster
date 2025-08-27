@@ -1,0 +1,37 @@
+agent = "Scheduler"
+
+[service]
+name = "slurm"
+url = "ws://localhost:8048/"
+ip = "127.0.0.1"
+port = 8048
+clients = []
+
+[[service.servers]]
+name = "cluster"
+url = "ws://localhost:8042/"
+zone = "local"
+
+[service.servers.inner_key]
+data = "f2aeb0d00823b858fe6edfeaf9489fe0a191246d42f4c2523f0a404f36ce3f59"
+
+[service.servers.outer_key]
+data = "4866220f06f4d871385429057c2de7a4b9794a2572ad2830321606390fc4470d"
+
+[extras]
+slurm-user = "slurm"
+token-command = "scontrol token"
+token-lifespan = "1800"
+#slurm-server = "http://localhost:6820"
+slurm-cluster = "linux"
+
+
+slurm-default-node = "{ \"cpus\": 1, \"mem\": 1024}"
+
+
+parent-account = "default"
+
+
+sacct = "sacct"
+sacctmgr = "sacctmgr"
+scontrol = "scontrol"

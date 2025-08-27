@@ -1,0 +1,25 @@
+agent = "Account"
+
+[service]
+name = "freeipa"
+url = "ws://localhost:8046/"
+ip = "127.0.0.1"
+port = 8046
+clients = []
+
+[[service.servers]]
+name = "cluster"
+url = "ws://localhost:8042/"
+zone = "local"
+
+[service.servers.inner_key]
+data = "8c93b8c21b81c6d07ba097696989cd42ce19589f1043ae91c3ee745662661c72"
+
+[service.servers.outer_key]
+data = "1f5561f6e07ab73f907f2f7fb29532c5cdc6397a96103af734eb0d653a10092f"
+
+[service.encryption.Simple]
+
+[extras]
+freeipa-password = "5206d61d5d32ffaa379e5ac490c27b0eb5037bca5f05628caf150acded054f6f657a3410f53d9caa76e3b4baf021aa439c65"
+freeipa-server = "https://ipa-server.ipa.local"

@@ -1,0 +1,21 @@
+agent = "Filesystem"
+
+[service]
+name = "filesystem"
+url = "ws://localhost:8047/"
+ip = "127.0.0.1"
+port = 8047
+clients = []
+
+[[service.servers]]
+name = "cluster"
+url = "ws://localhost:8042/"
+zone = "local"
+
+[service.servers.inner_key]
+data = "0fe0367eb153c9ac3cfff954a895936345e2bd6ccb4120a189aae5364e164274"
+
+[service.servers.outer_key]
+data = "c187c3847038ecfdbab9e7158333da2a6e538f4a75dc6247b15cc483ee479225"
+
+[extras]
