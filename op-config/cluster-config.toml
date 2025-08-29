@@ -22,7 +22,7 @@ name = "freeipa"
 zone = "local"
 
 [service.clients.ip]
-Range = "0.0.0.0/0"
+Range = "127.0.0.0/24"
 
 [service.clients.inner_key]
 data = "8c93b8c21b81c6d07ba097696989cd42ce19589f1043ae91c3ee745662661c72"
@@ -35,7 +35,7 @@ name = "slurm"
 zone = "local"
 
 [service.clients.ip]
-Range = "0.0.0.0/0"
+Range = "127.0.0.0/24"
 
 [service.clients.inner_key]
 data = "f2aeb0d00823b858fe6edfeaf9489fe0a191246d42f4c2523f0a404f36ce3f59"
@@ -48,7 +48,7 @@ name = "filesystem"
 zone = "local"
 
 [service.clients.ip]
-Range = "0.0.0.0/0"
+Range = "127.0.0.0/24"
 
 [service.clients.inner_key]
 data = "0fe0367eb153c9ac3cfff954a895936345e2bd6ccb4120a189aae5364e164274"
