@@ -103,6 +103,19 @@ FROM base as slurmctld
 # Set their permissions
 # Copy helper scripts and set their permissions
 # Enable the services so they start when systemd launches
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+RUN git clone https://github.com/isambard-sc/openportal.git && \
+    cd openportal && \
+    make
+RUN cd openportal && \
+    cp target/debug/op-cluster /usr/bin/ && \
+    cp target/debug/op-slurm /usr/bin/ && \
+    cp target/debug/op-filesystem /usr/bin/ && \
+    cp target/debug/op-freeipa /usr/bin/
+RUN mkdir -p /project /scratch
+
 RUN mkdir /etc/openportal
 COPY op-config/* /etc/openportal/
 COPY slurmctld/*.service /etc/systemd/system/
